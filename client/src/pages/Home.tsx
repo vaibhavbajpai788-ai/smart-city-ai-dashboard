@@ -1,5 +1,5 @@
 // Civic Signal Atlas: asymmetric control-room layout, semantic signal colors, warm ivory panels, restrained motion.
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
   Activity,
@@ -78,8 +78,38 @@ export default function Home() {
   const [showLayers, setShowLayers] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filter, setFilter] = useState("All incidents");
-  const selected = useMemo(() => junctions.find((j) => j.id === selectedId) ?? junctions[0], [selectedId]);
+  const [now, setNow] = useState(() => new Date());
+  const [refreshTick, setRefreshTick] = useState(0);
+  const [lastRefresh, setLastRefresh] = useState(() => new Date());
+
+  useEffect(() => {
+    const clock = window.setInterval(() => setNow(new Date()), 1000);
+    const refresh = window.setInterval(() => {
+      setRefreshTick((tick) => tick + 1);
+      setLastRefresh(new Date());
+    }, 12000);
+    return () => {
+      window.clearInterval(clock);
+      window.clearInterval(refresh);
+    };
+  }, []);
+
+  const displayJunctions = useMemo(() => junctions.map((junction, index) => {
+    const wave = Math.round(Math.sin(refreshTick * 0.9 + index) * 6);
+    const density = Math.max(8, Math.min(96, junction.density + wave));
+    const remaining = Math.max(3, junction.remaining - ((refreshTick + index) % 4));
+    const state = junction.state === "OFFLINE" ? junction.state : (refreshTick + index) % 7 === 0 ? "YELLOW" : junction.state;
+    return { ...junction, density, remaining, state };
+  }), [refreshTick]);
+  const selected = useMemo(() => displayJunctions.find((j) => j.id === selectedId) ?? displayJunctions[0], [displayJunctions, selectedId]);
   const visibleIncidents = filter === "All incidents" ? incidents : incidents.filter((incident) => incident.level === filter.toLowerCase());
+  const dateLabel = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "2-digit", month: "long", year: "numeric" }).format(now).toUpperCase();
+  const timeLabel = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(now);
+  const secondsSinceRefresh = Math.max(0, Math.floor((now.getTime() - lastRefresh.getTime()) / 1000));
+  const activeIncidents = 4 + (refreshTick % 2);
+  const monitoredJunctions = 42 + (refreshTick % 3);
+  const congestionRisk = Math.max(12, 18 + Math.round(Math.sin(refreshTick * 0.8) * 4));
+  const aiRecommendations = 7 + (refreshTick % 2);
 
   const comingSoon = (label: string) => toast(`${label} is coming soon`, { description: "The visual prototype is ready for live data connectors." });
 
@@ -107,28 +137,28 @@ export default function Home() {
       {sidebarOpen && <button className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} aria-label="Close navigation" />}
 
       <main className="main-content">
-        <header className="topbar"><button className="icon-button menu-button" onClick={() => setSidebarOpen(true)} aria-label="Open navigation"><Menu size={20} /></button><div className="breadcrumb"><span>Control room</span><span className="crumb-slash">/</span><b>Overview</b></div><div className="top-actions"><div className="live-status"><span className="live-pulse" />LIVE <span>Updated 12 sec ago</span></div><button className="icon-button" onClick={() => comingSoon("Notifications")} aria-label="Notifications"><Bell size={18} /><i /></button><button className="help-button" onClick={() => comingSoon("Command guide")}><CircleHelp size={16} /> Guide</button></div></header>
+        <header className="topbar"><button className="icon-button menu-button" onClick={() => setSidebarOpen(true)} aria-label="Open navigation"><Menu size={20} /></button><div className="breadcrumb"><span>Control room</span><span className="crumb-slash">/</span><b>Overview</b></div><div className="top-actions"><div className="live-status"><span className="live-pulse" />LIVE <span>Updated {secondsSinceRefresh}s ago</span></div><button className="icon-button" onClick={() => comingSoon("Notifications")} aria-label="Notifications"><Bell size={18} /><i /></button><button className="help-button" onClick={() => comingSoon("Command guide")}><CircleHelp size={16} /> Guide</button></div></header>
 
         <div className="content-wrap">
-          <section className="hero-row"><div><p className="eyebrow"><span className="eyebrow-line" />THURSDAY, 12 SEPTEMBER 2024 · 16:45</p><h1>Good afternoon, Aarav<span className="headline-dot">.</span></h1><p className="hero-subtitle">Here is what is changing across Lucknow right now.</p></div><button className="primary-button" onClick={() => comingSoon("New incident report")}><ShieldAlert size={16} /> Report incident</button></section>
+          <section className="hero-row"><div><p className="eyebrow"><span className="eyebrow-line" />{dateLabel} · {timeLabel}</p><h1>Good afternoon, Aarav<span className="headline-dot">.</span></h1><p className="hero-subtitle">Here is what is changing across Lucknow right now.</p></div><button className="primary-button" onClick={() => comingSoon("New incident report")}><ShieldAlert size={16} /> Report incident</button></section>
 
-          <section className="stats-grid"><StatCard label="Active incidents" value="04" trend="1 critical · 2 high" icon={ShieldAlert} tone="red" /><StatCard label="Monitored junctions" value="42" trend="38 responding normally" icon={TrafficCone} tone="cyan" /><StatCard label="Congestion risk" value="18%" trend="↓ 6% from yesterday" icon={Gauge} tone="green" /><StatCard label="AI recommendations" value="07" trend="3 need review" icon={Sparkles} tone="amber" /></section>
+          <section className="stats-grid"><StatCard label="Active incidents" value={String(activeIncidents).padStart(2, "0")} trend="1 critical · 2 high" icon={ShieldAlert} tone="red" /><StatCard label="Monitored junctions" value={String(monitoredJunctions)} trend={`${monitoredJunctions - 4} responding normally`} icon={TrafficCone} tone="cyan" /><StatCard label="Congestion risk" value={`${congestionRisk}%`} trend="↓ 6% from yesterday" icon={Gauge} tone="green" /><StatCard label="AI recommendations" value={String(aiRecommendations).padStart(2, "0")} trend="3 need review" icon={Sparkles} tone="amber" /></section>
 
           <section className="workspace-grid">
             <div className="map-panel panel-card">
               <div className="panel-heading"><div><p className="panel-kicker">LIVE TRAFFIC MAP</p><h2>City signal overview</h2></div><div className="heading-actions"><button className="ghost-button" onClick={() => setShowLayers((v) => !v)}><Layers3 size={15} /> Layers <ChevronDown size={13} /></button><button className="icon-button panel-more" onClick={() => comingSoon("Map options")} aria-label="Map options"><MoreHorizontal size={17} /></button></div></div>
               <div className="map-stage"><div className="map-image" /><div className="map-grid-lines" /><div className="map-label label-north">N</div><div className="map-label label-east">E</div><div className="map-road road-one" /><div className="map-road road-two" /><div className="map-road road-three" /><div className="map-road road-four" />
-                {junctions.map((junction) => <button key={junction.id} className={`map-marker ${selectedId === junction.id ? "selected" : ""}`} style={{ left: junction.x, top: junction.y }} onClick={() => setSelectedId(junction.id)} aria-label={`Select ${junction.name} junction`}><span className="marker-ring" /><SignalDot state={junction.state} size="lg" /><span className="marker-card"><b>{junction.id} · {junction.name}</b><small>{junction.state} · {junction.remaining}s</small></span></button>)}
+                {displayJunctions.map((junction) => <button key={junction.id} className={`map-marker ${selectedId === junction.id ? "selected" : ""}`} style={{ left: junction.x, top: junction.y }} onClick={() => setSelectedId(junction.id)} aria-label={`Select ${junction.name} junction`}><span className="marker-ring" /><SignalDot state={junction.state} size="lg" /><span className="marker-card"><b>{junction.id} · {junction.name}</b><small>{junction.state} · {junction.remaining}s</small></span></button>)}
                 <div className="map-scale"><span /> <small>500 m</small></div><div className={`layer-menu ${showLayers ? "layer-menu-visible" : ""}`}><b>Map layers</b><label><input type="checkbox" defaultChecked /> Signal state</label><label><input type="checkbox" defaultChecked /> Congestion</label><label><input type="checkbox" /> Incidents</label></div>
               </div>
               <div className="map-legend"><span><SignalDot state="RED" /> Red signal</span><span><SignalDot state="GREEN" /> Green signal</span><span><SignalDot state="YELLOW" /> Changing</span><span><SignalDot state="OFFLINE" /> Unavailable</span><button onClick={() => comingSoon("Full map")}><ArrowUpRight size={14} /> Open full map</button></div>
             </div>
 
-            <aside className="ai-panel panel-card"><div className="ai-heading"><div className="ai-orb"><Bot size={19} /></div><div><p className="panel-kicker">AI INSIGHT</p><h2>Decision support</h2></div><span className="confidence-tag">LIVE</span></div><div className="ai-feature"><div className="ai-feature-top"><span className="ai-spark"><Sparkles size={15} /></span><span>Signal optimisation</span><span className="ai-time">just now</span></div><h3>Northbound traffic is building at Kanpur Road.</h3><p>Density is <b>82%</b>, 48 points above the southbound lane. The next cycle is a good moment to rebalance.</p><div className="recommendation"><div className="recommendation-icon"><ArrowUpRight size={16} /></div><div><small>RECOMMENDATION</small><b>Extend north green by 15 sec</b></div></div><div className="ai-actions"><button className="primary-button small" onClick={() => toast("Recommendation marked for review")}>Review recommendation</button><button className="text-button" onClick={() => comingSoon("Recommendation details")}>Why this?</button></div></div><div className="ai-footer"><span><CheckCircle2 size={14} /> Explainable output</span><span>Confidence 94%</span></div></aside>
+            <aside className="ai-panel panel-card"><div className="ai-heading"><div className="ai-orb"><Bot size={19} /></div><div><p className="panel-kicker">AI INSIGHT</p><h2>Decision support</h2></div><span className="confidence-tag">LIVE</span></div><div className="ai-feature"><div className="ai-feature-top"><span className="ai-spark"><Sparkles size={15} /></span><span>Signal optimisation</span><span className="ai-time">just now</span></div><h3>Northbound traffic is building at Kanpur Road.</h3><p>Density is <b>{selected.density}%</b>, {Math.max(12, selected.density - 34)} points above the southbound lane. The next cycle is a good moment to rebalance.</p><div className="recommendation"><div className="recommendation-icon"><ArrowUpRight size={16} /></div><div><small>RECOMMENDATION</small><b>Extend north green by {10 + (refreshTick % 6)} sec</b></div></div><div className="ai-actions"><button className="primary-button small" onClick={() => toast("Recommendation marked for review")}>Review recommendation</button><button className="text-button" onClick={() => comingSoon("Recommendation details")}>Why this?</button></div></div><div className="ai-footer"><span><CheckCircle2 size={14} /> Explainable output</span><span>Confidence 94%</span></div></aside>
           </section>
 
           <section className="lower-grid"><div className="incidents-panel panel-card"><div className="panel-heading compact"><div><p className="panel-kicker">NEEDS ATTENTION</p><h2>Incident queue</h2></div><div className="filter-wrap"><SlidersHorizontal size={14} /><select value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="Filter incidents"><option>All incidents</option><option>Critical</option><option>High</option><option>Medium</option></select></div></div><div className="incident-list">{visibleIncidents.map((incident) => { const Icon = incident.icon; return <button className="incident-row" key={incident.type} onClick={() => toast(`${incident.type}: ${incident.detail}`)}><div className={`incident-icon ${incident.level}`}><Icon size={16} /></div><div className="incident-copy"><div><b>{incident.type}</b><span className={`severity ${incident.level}`}>{incident.level}</span></div><p>{incident.place}</p><small>{incident.detail}</small></div><div className="incident-time">{incident.time}<ArrowUpRight size={15} /></div></button>; })}</div><button className="view-all-button" onClick={() => comingSoon("Incident queue")}>View all incidents <ArrowUpRight size={15} /></button></div>
-            <div className="signals-panel panel-card"><div className="panel-heading compact"><div><p className="panel-kicker">SIGNAL NETWORK</p><h2>Junction status</h2></div><button className="text-button" onClick={() => comingSoon("Signal network")}>View network <ArrowUpRight size={14} /></button></div><div className="signal-table"><div className="signal-table-head"><span>Junction</span><span>Signal</span><span>Traffic</span></div>{junctions.map((j) => <button className={`signal-table-row ${selectedId === j.id ? "row-selected" : ""}`} key={j.id} onClick={() => setSelectedId(j.id)}><div className="junction-name"><span className="junction-letter">{j.id}</span><span><b>{j.name}</b><small>{j.ward}</small></span></div><div className="signal-state"><SignalDot state={j.state} /><span>{j.state}</span><small>{j.remaining}s</small></div><div className="traffic-level"><span>{j.traffic}</span><div className="mini-bar"><i style={{ width: `${j.density}%` }} /></div></div></button>)}</div></div></section>
+            <div className="signals-panel panel-card"><div className="panel-heading compact"><div><p className="panel-kicker">SIGNAL NETWORK</p><h2>Junction status</h2></div><button className="text-button" onClick={() => comingSoon("Signal network")}>View network <ArrowUpRight size={14} /></button></div><div className="signal-table"><div className="signal-table-head"><span>Junction</span><span>Signal</span><span>Traffic</span></div>{displayJunctions.map((j) => <button className={`signal-table-row ${selectedId === j.id ? "row-selected" : ""}`} key={j.id} onClick={() => setSelectedId(j.id)}><div className="junction-name"><span className="junction-letter">{j.id}</span><span><b>{j.name}</b><small>{j.ward}</small></span></div><div className="signal-state"><SignalDot state={j.state} /><span>{j.state}</span><small>{j.remaining}s</small></div><div className="traffic-level"><span>{j.traffic}</span><div className="mini-bar"><i style={{ width: `${j.density}%` }} /></div></div></button>)}</div></div></section>
 
           <section className="footer-insights"><div className="weather-strip panel-card"><div className="weather-main"><CloudRain size={21} /><div><p>Lucknow weather</p><b>28° <span>Partly cloudy</span></b></div></div><div className="weather-metric"><Wind size={15} /><span>Wind</span><b>12 km/h</b></div><div className="weather-metric"><Thermometer size={15} /><span>Feels like</span><b>31°</b></div><div className="weather-note"><span className="amber-dot" /> Rain may increase road friction after 18:00</div></div></section>
         </div>
