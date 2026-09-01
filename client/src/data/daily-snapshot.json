@@ -1,0 +1,56 @@
+{
+  "date": "2026-09-01",
+  "generatedAt": "2026-09-01T09:54:35.163Z",
+  "summary": {
+    "activeIncidents": 4,
+    "monitoredJunctions": 43,
+    "congestionRisk": 26,
+    "aiRecommendations": 8
+  },
+  "junctions": [
+    {
+      "id": "A",
+      "name": "Kanpur Road",
+      "ward": "Ward 07",
+      "traffic": "High",
+      "state": "RED",
+      "remaining": 29,
+      "x": "40%",
+      "y": "46%",
+      "density": 88
+    },
+    {
+      "id": "B",
+      "name": "Civil Lines",
+      "ward": "Ward 03",
+      "traffic": "Medium",
+      "state": "GREEN",
+      "remaining": 16,
+      "x": "67%",
+      "y": "32%",
+      "density": 56
+    },
+    {
+      "id": "C",
+      "name": "Mall Road",
+      "ward": "Ward 11",
+      "traffic": "High",
+      "state": "YELLOW",
+      "remaining": 4,
+      "x": "72%",
+      "y": "69%",
+      "density": 73
+    },
+    {
+      "id": "D",
+      "name": "Sharda Nagar",
+      "ward": "Ward 14",
+      "traffic": "Low",
+      "state": "RED",
+      "remaining": 53,
+      "x": "29%",
+      "y": "72%",
+      "density": 27
+    }
+  ]
+}

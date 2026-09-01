@@ -1,6 +1,7 @@
 // Civic Signal Atlas: asymmetric control-room layout, semantic signal colors, warm ivory panels, restrained motion.
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import dailySnapshot from "@/data/daily-snapshot.json";
 import {
   Activity,
   AlertTriangle,
@@ -44,12 +45,7 @@ type Junction = {
   density: number;
 };
 
-const junctions: Junction[] = [
-  { id: "A", name: "Kanpur Road", ward: "Ward 07", traffic: "High", state: "RED", remaining: 32, x: "40%", y: "46%", density: 82 },
-  { id: "B", name: "Civil Lines", ward: "Ward 03", traffic: "Medium", state: "GREEN", remaining: 18, x: "67%", y: "32%", density: 54 },
-  { id: "C", name: "Mall Road", ward: "Ward 11", traffic: "High", state: "YELLOW", remaining: 5, x: "72%", y: "69%", density: 77 },
-  { id: "D", name: "Sharda Nagar", ward: "Ward 14", traffic: "Low", state: "RED", remaining: 48, x: "29%", y: "72%", density: 21 },
-];
+const junctions: Junction[] = dailySnapshot.junctions as Junction[];
 
 const incidents = [
   { type: "Accident", place: "Kanpur Road Junction", time: "04:32 PM", level: "critical", icon: ShieldAlert, detail: "Possible collision detected from citizen report." },
@@ -106,10 +102,10 @@ export default function Home() {
   const dateLabel = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "2-digit", month: "long", year: "numeric" }).format(now).toUpperCase();
   const timeLabel = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(now);
   const secondsSinceRefresh = Math.max(0, Math.floor((now.getTime() - lastRefresh.getTime()) / 1000));
-  const activeIncidents = 4 + (refreshTick % 2);
-  const monitoredJunctions = 42 + (refreshTick % 3);
-  const congestionRisk = Math.max(12, 18 + Math.round(Math.sin(refreshTick * 0.8) * 4));
-  const aiRecommendations = 7 + (refreshTick % 2);
+  const activeIncidents = dailySnapshot.summary.activeIncidents + (refreshTick % 2);
+  const monitoredJunctions = dailySnapshot.summary.monitoredJunctions + (refreshTick % 3);
+  const congestionRisk = Math.max(12, dailySnapshot.summary.congestionRisk + Math.round(Math.sin(refreshTick * 0.8) * 4));
+  const aiRecommendations = dailySnapshot.summary.aiRecommendations + (refreshTick % 2);
 
   const comingSoon = (label: string) => toast(`${label} is coming soon`, { description: "The visual prototype is ready for live data connectors." });
 
@@ -140,7 +136,7 @@ export default function Home() {
         <header className="topbar"><button className="icon-button menu-button" onClick={() => setSidebarOpen(true)} aria-label="Open navigation"><Menu size={20} /></button><div className="breadcrumb"><span>Control room</span><span className="crumb-slash">/</span><b>Overview</b></div><div className="top-actions"><div className="live-status"><span className="live-pulse" />LIVE <span>Updated {secondsSinceRefresh}s ago</span></div><button className="icon-button" onClick={() => comingSoon("Notifications")} aria-label="Notifications"><Bell size={18} /><i /></button><button className="help-button" onClick={() => comingSoon("Command guide")}><CircleHelp size={16} /> Guide</button></div></header>
 
         <div className="content-wrap">
-          <section className="hero-row"><div><p className="eyebrow"><span className="eyebrow-line" />{dateLabel} · {timeLabel}</p><h1>Good afternoon, Aarav<span className="headline-dot">.</span></h1><p className="hero-subtitle">Here is what is changing across Lucknow right now.</p></div><button className="primary-button" onClick={() => comingSoon("New incident report")}><ShieldAlert size={16} /> Report incident</button></section>
+          <section className="hero-row"><div><p className="eyebrow"><span className="eyebrow-line" />{dateLabel} · {timeLabel}<span className="snapshot-date">DATA {dailySnapshot.date}</span></p><h1>Good afternoon, Aarav<span className="headline-dot">.</span></h1><p className="hero-subtitle">Here is what is changing across Lucknow right now.</p></div><button className="primary-button" onClick={() => comingSoon("New incident report")}><ShieldAlert size={16} /> Report incident</button></section>
 
           <section className="stats-grid"><StatCard label="Active incidents" value={String(activeIncidents).padStart(2, "0")} trend="1 critical · 2 high" icon={ShieldAlert} tone="red" /><StatCard label="Monitored junctions" value={String(monitoredJunctions)} trend={`${monitoredJunctions - 4} responding normally`} icon={TrafficCone} tone="cyan" /><StatCard label="Congestion risk" value={`${congestionRisk}%`} trend="↓ 6% from yesterday" icon={Gauge} tone="green" /><StatCard label="AI recommendations" value={String(aiRecommendations).padStart(2, "0")} trend="3 need review" icon={Sparkles} tone="amber" /></section>
 
