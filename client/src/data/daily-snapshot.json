@@ -1,11 +1,11 @@
 {
-  "date": "2026-09-01",
-  "generatedAt": "2026-09-01T09:54:35.163Z",
+  "date": "2026-09-02",
+  "generatedAt": "2026-09-02T04:31:31.727Z",
   "summary": {
-    "activeIncidents": 4,
-    "monitoredJunctions": 43,
-    "congestionRisk": 26,
-    "aiRecommendations": 8
+    "activeIncidents": 5,
+    "monitoredJunctions": 44,
+    "congestionRisk": 29,
+    "aiRecommendations": 9
   },
   "junctions": [
     {
@@ -14,10 +14,10 @@
       "ward": "Ward 07",
       "traffic": "High",
       "state": "RED",
-      "remaining": 29,
+      "remaining": 26,
       "x": "40%",
       "y": "46%",
-      "density": 88
+      "density": 95
     },
     {
       "id": "B",
@@ -25,21 +25,21 @@
       "ward": "Ward 03",
       "traffic": "Medium",
       "state": "GREEN",
-      "remaining": 16,
+      "remaining": 14,
       "x": "67%",
       "y": "32%",
-      "density": 56
+      "density": 58
     },
     {
       "id": "C",
       "name": "Mall Road",
       "ward": "Ward 11",
-      "traffic": "High",
+      "traffic": "Medium",
       "state": "YELLOW",
-      "remaining": 4,
+      "remaining": 3,
       "x": "72%",
       "y": "69%",
-      "density": 73
+      "density": 69
     },
     {
       "id": "D",
@@ -47,10 +47,10 @@
       "ward": "Ward 14",
       "traffic": "Low",
       "state": "RED",
-      "remaining": 53,
+      "remaining": 58,
       "x": "29%",
       "y": "72%",
-      "density": 27
+      "density": 33
     }
   ]
 }
