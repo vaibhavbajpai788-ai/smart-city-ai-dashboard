@@ -1,11 +1,11 @@
 {
-  "date": "2026-09-03",
-  "generatedAt": "2026-09-03T04:21:35.174Z",
+  "date": "2026-09-04",
+  "generatedAt": "2026-09-04T04:30:46.059Z",
   "summary": {
-    "activeIncidents": 3,
-    "monitoredJunctions": 45,
+    "activeIncidents": 4,
+    "monitoredJunctions": 42,
     "congestionRisk": 28,
-    "aiRecommendations": 5
+    "aiRecommendations": 6
   },
   "junctions": [
     {
@@ -13,11 +13,11 @@
       "name": "Kanpur Road",
       "ward": "Ward 07",
       "traffic": "High",
-      "state": "YELLOW",
-      "remaining": 23,
+      "state": "RED",
+      "remaining": 20,
       "x": "40%",
       "y": "46%",
-      "density": 88
+      "density": 82
     },
     {
       "id": "B",
@@ -25,10 +25,10 @@
       "ward": "Ward 03",
       "traffic": "Medium",
       "state": "GREEN",
-      "remaining": 12,
+      "remaining": 10,
       "x": "67%",
       "y": "32%",
-      "density": 60
+      "density": 62
     },
     {
       "id": "C",
@@ -39,18 +39,18 @@
       "remaining": 3,
       "x": "72%",
       "y": "69%",
-      "density": 65
+      "density": 61
     },
     {
       "id": "D",
       "name": "Sharda Nagar",
       "ward": "Ward 14",
-      "traffic": "Low",
+      "traffic": "Medium",
       "state": "RED",
-      "remaining": 63,
+      "remaining": 68,
       "x": "29%",
       "y": "72%",
-      "density": 39
+      "density": 45
     }
   ]
 }
