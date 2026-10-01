@@ -1,9 +1,9 @@
 {
-  "date": "2026-09-30",
-  "generatedAt": "2026-09-30T05:30:26.211Z",
+  "date": "2026-10-01",
+  "generatedAt": "2026-10-01T05:49:46.774Z",
   "summary": {
-    "activeIncidents": 3,
-    "monitoredJunctions": 43,
+    "activeIncidents": 5,
+    "monitoredJunctions": 45,
     "congestionRisk": 9,
     "aiRecommendations": 5
   },
@@ -14,21 +14,21 @@
       "ward": "Ward 07",
       "traffic": "Low",
       "state": "YELLOW",
-      "remaining": 62,
+      "remaining": 67,
       "x": "40%",
       "y": "46%",
-      "density": 25
+      "density": 23
     },
     {
       "id": "B",
       "name": "Civil Lines",
       "ward": "Ward 03",
-      "traffic": "Medium",
+      "traffic": "Low",
       "state": "GREEN",
       "remaining": 3,
       "x": "67%",
       "y": "32%",
-      "density": 42
+      "density": 39
     },
     {
       "id": "C",
@@ -36,10 +36,10 @@
       "ward": "Ward 11",
       "traffic": "Low",
       "state": "YELLOW",
-      "remaining": 3,
+      "remaining": 6,
       "x": "72%",
       "y": "69%",
-      "density": 8
+      "density": 14
     },
     {
       "id": "D",
@@ -50,7 +50,7 @@
       "remaining": 198,
       "x": "29%",
       "y": "72%",
-      "density": 96
+      "density": 92
     }
   ]
 }
