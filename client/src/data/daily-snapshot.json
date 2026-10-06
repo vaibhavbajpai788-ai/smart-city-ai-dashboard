@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-05",
-  "generatedAt": "2026-10-05T05:36:36.992Z",
+  "date": "2026-10-06",
+  "generatedAt": "2026-10-06T06:18:10.251Z",
   "summary": {
-    "activeIncidents": 3,
-    "monitoredJunctions": 45,
+    "activeIncidents": 4,
+    "monitoredJunctions": 42,
     "congestionRisk": 9,
-    "aiRecommendations": 9
+    "aiRecommendations": 5
   },
   "junctions": [
     {
@@ -13,11 +13,11 @@
       "name": "Kanpur Road",
       "ward": "Ward 07",
       "traffic": "Low",
-      "state": "RED",
-      "remaining": 87,
+      "state": "YELLOW",
+      "remaining": 82,
       "x": "40%",
       "y": "46%",
-      "density": 25
+      "density": 28
     },
     {
       "id": "B",
@@ -28,18 +28,18 @@
       "remaining": 3,
       "x": "67%",
       "y": "32%",
-      "density": 27
+      "density": 25
     },
     {
       "id": "C",
       "name": "Mall Road",
       "ward": "Ward 11",
-      "traffic": "Low",
+      "traffic": "Medium",
       "state": "YELLOW",
-      "remaining": 18,
+      "remaining": 21,
       "x": "72%",
       "y": "69%",
-      "density": 38
+      "density": 44
     },
     {
       "id": "D",
@@ -50,7 +50,7 @@
       "remaining": 198,
       "x": "29%",
       "y": "72%",
-      "density": 76
+      "density": 72
     }
   ]
 }
