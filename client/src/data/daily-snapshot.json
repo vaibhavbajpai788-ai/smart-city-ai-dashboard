@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-21",
-  "generatedAt": "2026-10-21T04:43:31.276Z",
+  "date": "2026-10-22",
+  "generatedAt": "2026-10-22T04:41:14.921Z",
   "summary": {
-    "activeIncidents": 4,
-    "monitoredJunctions": 43,
-    "congestionRisk": 19,
-    "aiRecommendations": 7
+    "activeIncidents": 5,
+    "monitoredJunctions": 44,
+    "congestionRisk": 20,
+    "aiRecommendations": 8
   },
   "junctions": [
     {
@@ -14,10 +14,10 @@
       "ward": "Ward 07",
       "traffic": "Medium",
       "state": "RED",
-      "remaining": 54,
+      "remaining": 56,
       "x": "40%",
       "y": "46%",
-      "density": 67
+      "density": 68
     },
     {
       "id": "B",
@@ -28,7 +28,7 @@
       "remaining": 3,
       "x": "67%",
       "y": "32%",
-      "density": 42
+      "density": 47
     },
     {
       "id": "C",
@@ -36,7 +36,7 @@
       "ward": "Ward 11",
       "traffic": "High",
       "state": "YELLOW",
-      "remaining": 66,
+      "remaining": 69,
       "x": "72%",
       "y": "69%",
       "density": 96
@@ -50,7 +50,7 @@
       "remaining": 198,
       "x": "29%",
       "y": "72%",
-      "density": 12
+      "density": 8
     }
   ]
 }
