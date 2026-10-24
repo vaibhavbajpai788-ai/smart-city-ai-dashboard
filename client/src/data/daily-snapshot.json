@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-23",
-  "generatedAt": "2026-10-23T04:46:23.660Z",
+  "date": "2026-10-24",
+  "generatedAt": "2026-10-24T04:33:44.215Z",
   "summary": {
-    "activeIncidents": 3,
-    "monitoredJunctions": 45,
-    "congestionRisk": 22,
-    "aiRecommendations": 9
+    "activeIncidents": 4,
+    "monitoredJunctions": 42,
+    "congestionRisk": 24,
+    "aiRecommendations": 5
   },
   "junctions": [
     {
@@ -13,11 +13,11 @@
       "name": "Kanpur Road",
       "ward": "Ward 07",
       "traffic": "High",
-      "state": "RED",
-      "remaining": 58,
+      "state": "YELLOW",
+      "remaining": 60,
       "x": "40%",
       "y": "46%",
-      "density": 70
+      "density": 73
     },
     {
       "id": "B",
@@ -28,7 +28,7 @@
       "remaining": 3,
       "x": "67%",
       "y": "32%",
-      "density": 52
+      "density": 57
     },
     {
       "id": "C",
@@ -36,7 +36,7 @@
       "ward": "Ward 11",
       "traffic": "High",
       "state": "YELLOW",
-      "remaining": 72,
+      "remaining": 75,
       "x": "72%",
       "y": "69%",
       "density": 96
